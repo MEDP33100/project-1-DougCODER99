@@ -1,40 +1,126 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/2JhgCWku)
-# MEDP 33100 Project 1: Interactive Storytelling
+<!DOC TYPE html>
+<html> lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sprite from jSON</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    </html>
 
-## Project Overview
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+  }
+  
+  .sprite {
+    width: 130px;
+    height: 230px;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sprite img {
+    width: 150px;
+    height: 150px;
+    border-radius: 15px;
+  }
+  
+  .sprite p {
+    margin: 5px 0;
+  }
+  
+  .sprite:hover {
+    transform: scale(1.1);
+  }
 
-- Briefly describe the purpose of the project.
-- Explain the story you are telling through the webpage and the key interactive elements.
 
-## Figma Design
+  
+fetch('data.json')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); 
+    data.forEach(item => {
+      createSprite(item);
+    });
+  })
+  .catch(error => console.error('Error fetching data:', error));
 
-- Provide a link to the Figma design of the webpage.
-- Briefly explain the design process and how the layout was planned in Figma.
+class Sprite {
+  constructor(id, title, artist, cover, duration) {
+    this.id = id;
+    this.title = title;
+    this.artist = artist;
+    this.cover = cover;
+    this.duration = duration;
+    this.element = null; 
+  }
 
-## Features
 
-- List the key features of the project, including:
-    - **Animations**: Describe the animations you implemented (e.g., CSS transitions, GSAP effects).
-    - **Sound Effects**: Specify where sound effects are used and how they enhance the user experience.
-    - **User-triggered Events**: Explain how users interact with the page (e.g., clicking, scrolling, hovering) and how the page responds.
-    - **Responsive Design**: Explain how the design adapts to different devices (e.g., desktop, tablet, mobile).
+  createElement() {
+    this.element = document.createElement('div');
+    this.element.classList.add('sprite');
+  
+    const img = document.createElement('img');
+    img.src = this.cover; 
+    img.alt = `${this.title} Cover`;
+    
+    const title = document.createElement('p');
+    title.textContent = this.title;
+    
+    const artist = document.createElement('p');
+    artist.textContent = `by ${this.artist}`;
+    
+    this.element.appendChild(img);
+    this.element.appendChild(title);
+    this.element.appendChild(artist);
 
-## Technologies Used
+ 
+    const container = document.getElementById('sprite-container');
+    if (container) {
+      container.appendChild(this.element);
+    } else {
+      document.body.appendChild(this.element); // Fallback
+    }
+  }
+}
 
-- List the technologies and tools used in the project:
-    - **Languages**: HTML, CSS, JavaScript
-    - **Libraries**: (e.g., GSAP for animations)
-    - **Other**: GitHub Pages for hosting, Figma for design
 
-## Live Demo
+function createSprite(data) {
+  const sprite = new Sprite(data.id, data.title, data.artist, data.cover, data.duration);
+  sprite.createElement();
+}
 
-- Include a link to the live version of the project hosted on GitHub Pages.
-
-## Credits
-
-- List any third-party assets used in the project (e.g., sound effects, images, fonts) and provide proper attribution.
-- Acknowledge any resources, tutorials, or references you used to help complete the project.
-
-## Future Enhancements
-
-- List any features you would’ve liked to add if given more time
+[
+    {
+      "id": 1,
+      "title": "Song 1",
+      "artist": "Artist A",
+      "cover": "song1.jpg",
+      "duration": "3:45"
+    },
+    {
+      "id": 2,
+      "title": "Song 2",
+      "artist": "Artist B",
+      "cover": "song2.jpg",
+      "duration": "4:10"
+    },
+    {
+      "id": 3,
+      "title": "Song 3",
+      "artist": "Artist C",
+      "cover": "song3.jpg",
+      "duration": "2:30"
+    }
+  ]
